@@ -1,7 +1,5 @@
 import { IUser } from "./interfaces/user.js"
-import { IEvents } from "./interfaces/events.js"
 import { addUser, getAll, suppUser } from "./modele/utilisateurs.js"
-import { getAllEvents } from "./modele/events.js"
 import  "./calendar/calendar.js"
 
 
@@ -9,12 +7,11 @@ const nomEncours = document.getElementById('nom') as HTMLInputElement
 const prenomEnCours = document.getElementById('prenom') as HTMLInputElement
 const btnAjout = document.getElementById('ajouter')
 const result = document.getElementById('result')
-const eventsList = document.getElementById('eventsList')
+
 
 
 
 let users: IUser[] = []
-let events: IEvents[] = []
 
 function afficheUser() {
     getAll().then((data: any) => {
@@ -71,24 +68,5 @@ btnAjout?.addEventListener("click", () => {
     })
 })
 
-function displayEvents() {
-    getAllEvents().then((data: any) => {
-        events = [...data]
-        if (eventsList) {
-            eventsList.innerHTML = ""
-            for (let i in events) {
-                let ligne = document.createElement('li')
-                let dateEv = events[i].date
-                console.log(dateEv.toString())
-                
-            }
-        }
-    }).catch(err => {
-        throw new Error(err.message)
-    })
-}
-
 afficheUser()
-displayEvents()
-
 

@@ -110,3 +110,13 @@ html {
 .today {
   background-color: #167e56;
 }
+
+.dot{
+  height: 15px;
+  width: 15px;
+  background-color: rgb(230, 67, 67);
+  border-radius: 50%;
+  text-align: center;
+  display: inline-block;
+  transform: translate(12px, -12px);
+}
