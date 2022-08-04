@@ -16,3 +16,15 @@ export function getAllEvents() {
         })
     })
 }
+
+export function getEvent(date:string){
+    return new Promise((result,rej) => {
+        conn.query(`SELECT * FROM events WHERE date = '${date}'`,(err:any, res:any) => {
+            if (err)
+                rej(err);
+            else
+                result(res);
+        });
+    });
+}
+

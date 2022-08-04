@@ -9,7 +9,7 @@
     },
     "include": [
         "src/**/*.ts"
-    ],
+, "src/calendar/calendar.ts.old"    ],
     "exclude": [
         "node_modules",
         "**/*.spec.ts"

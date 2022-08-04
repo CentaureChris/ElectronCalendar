@@ -1,13 +1,28 @@
-import { getAllEvents } from "../modele/events.js"
+import { getAllEvents, getEvent } from "../modele/events.js"
 import { IEvents } from "../interfaces/events.js"
 
 const date = new Date();
+
+function formatDate(date:Date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 
 const renderCalendar = () => {
   date.setDate(1);
 
   const monthDays = document.querySelector(".days") as HTMLDivElement
-
+  monthDays.innerHTML = ""
   const lastDay = new Date(
     date.getFullYear(),
     date.getMonth() + 1,
@@ -45,71 +60,97 @@ const renderCalendar = () => {
     "December",
   ];
 
-    let date_h1 = document.querySelector('.date h1') as HTMLDivElement
-    let date_p = document.querySelector('.date p') as HTMLDivElement
+    const date_h1 = document.querySelector('.date h1')
+    const date_p = document.querySelector('.date p')
+  if(date_h1 !== null && date_p !== null){
 
     date_h1.innerHTML = months[date.getMonth()];
     date_p.innerHTML = new Date().toDateString();
 
-  let days = "";
+    const days = document.createElement('div')
 
-  for (let x = firstDayIndex; x > 0; x--) {
-    days += `<div class="prev-date">${prevLastDay - x + 1}</div>`;
-  }
-
-  let events: IEvents[] = []
-  let table:Array<string> = []
-  getAllEvents().then((data: any) => {
-    events = [...data]
-  
-  for(let e of events){
-    table.push(e.date.toString())
-  }
-  
-  let count = 0
-  
-  for (let i = 1; i <= lastDay; i++) {
-    let test = new Date()
-    test.setFullYear(date.getFullYear(),date.getMonth(),i)
-    test.setMinutes(0)
-    test.setHours(0)
-    test.setSeconds(0)
-
-    for(let t of table){
-      if(t == test.toString()){
-        count++
-      }
+    for (let x = firstDayIndex; x > 0; x--) {
+      const prevDays = document.createElement('div')
+      prevDays.classList.add('prev-date')
+      prevDays.innerHTML = `${prevLastDay - x + 1}`
+      monthDays.appendChild(prevDays)
     }
 
-    if (
-      i === new Date().getDate() &&
-      date.getMonth() === new Date().getMonth()
-    ) {
-      if(table.includes(test.toString())){
-      days += `<div class="today">${i}<small class="dot">${count}</small></div>`;
-      }else{ 
-      days += `<div class="today">${i}</div>`;
+    let events: IEvents[] = []
+    let table:Array<Date> = []
+    getAllEvents().then((data: any) => {
+      events = [...data]
+      for(let e of events){
+        table.push(e.date)
       }
-    } else {
-      if(table.includes(test.toString())){
-        days += `<div>${i}<small class="dot">${count}</small></div>`
-      }else{
-        days += `<div>${i}</div>`;
-      }
+    
+      let count = 0
+  
+      for (let i = 1; i <= lastDay; i++) {
+        let dtime = new Date()
+        dtime.setFullYear(date.getFullYear(),date.getMonth(),i)
+        dtime.setMinutes(0)
+        dtime.setHours(0)
+        dtime.setSeconds(0)
+    
+        for(let t of table){
+          if(t.toDateString() == dtime.toDateString()){
+            count++
+          }
+        }
+
+        if (
+          i === new Date().getDate() &&
+          date.getMonth() === new Date().getMonth()
+        ) {
+          if(table.find(date =>date.toDateString() === dtime.toDateString(),)){
+            const day = document.createElement('div')
+            day.classList.add('today')
+            day.id = `${dtime}`
+            day.innerHTML = `${i}<small class="dot">${count}</small>`
+            monthDays.appendChild(day)
+          }else{ 
+          const day = document.createElement('div')
+            day.classList.add('today')
+            day.id = `${dtime}`
+            day.innerHTML = `${i}`
+            monthDays.appendChild(day)
+          }
+        } else {
+          if(table.find(date =>date.toDateString() === dtime.toDateString(),)){
+            const day = document.createElement('div')
+            day.id = `${dtime}`
+            day.innerHTML = `${i}<small class="dot">${count}</small>`
+            monthDays.appendChild(day)
+          }else{
+            const day = document.createElement('div')
+            day.id = `${dtime}`
+            day.innerHTML = `${i}`
+            monthDays.appendChild(day)
+          }
+        }      
+      count = 0
     }
-  count = 0
+    for (let j = 1; j <= nextDays; j++) {
+      const nextDays = document.createElement('div')
+      nextDays.classList.add('next-date')
+      nextDays.innerHTML = `${j}`
+      monthDays.appendChild(nextDays)
+    }
 
+    [...monthDays.children].forEach((el) => {
+      el.addEventListener('click', () => {
+        console.log(formatDate(new Date(el.id)))
+        getEvent(formatDate(new Date(el.id)))
+          .then((data: any) => {
+            let eventClicked = data
+            console.log(eventClicked)
+          })
+        }) 
+      })
+    })
   }
-  for (let j = 1; j <= nextDays; j++) {
-    days += `<div class="next-date">${j}</div>`;
-    monthDays.innerHTML = days;
-  }
-
-}).catch(err => {
-  throw new Error(err.message)
-})
-
-};
+}
 
 let prev = document.querySelector('.prev') as HTMLDivElement
 prev.addEventListener("click", () => {
@@ -123,20 +164,4 @@ next.addEventListener("click", () => {
   renderCalendar();
 });
 
-let days = document.getElementsByClassName('day') as HTMLCollection
-
-
-// let events: IEvents[] = []
-
-// function displayEvents() {
-//     getAllEvents().then((data: any) => {
-//         events = [...data]
-//         console.log(events)
-//     }).catch(err => {
-//         throw new Error(err.message)
-//     })
-// }
-
-
-// displayEvents()
-renderCalendar();
+renderCalendar()
