@@ -1,10 +1,12 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 
 let eventEnCour:any = null
+let mainWindow:typeof BrowserWindow | null = null
+let modal:typeof BrowserWindow | null = null
 
 const createWindow = () => {
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 1200,
         height: 900,
         webPreferences: {
@@ -15,32 +17,41 @@ const createWindow = () => {
 
     // and load the index.html of the app.
     mainWindow.loadFile('./dist/index.html')
-
-    ipcMain.handle('open-modal', (e: any,data:any) => {
-        eventEnCour = data 
-        const modal = new BrowserWindow({
-            width: 800,
-            height: 600,
-            parent: mainWindow,
-            closable: true,
-            webPreferences: {
-                nodeIntegration: true,
-                contextIsolation: false
-            }
-        })
-        modal.loadFile('./dist/modal.html')
-        modal.once('ready-to-show', () => {
-        })
-    })
-
-    ipcMain.handle('test', () => {
-        let ret = eventEnCour
-        eventEnCour = null
-        return ret
-    })
+    
     // Open the DevTools.
     mainWindow.webContents.openDevTools()
 }
+
+ipcMain.handle('open-modal', (e: any,data:any) => {
+    eventEnCour = data 
+    modal = new BrowserWindow({
+        width: 800,
+        height: 600,
+        parent: mainWindow,
+        closable: true,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        }
+    })
+    modal.loadFile('./dist/modal.html')
+    
+    
+})
+
+ipcMain.handle('test', () => {
+    let ret = eventEnCour
+    // eventEnCour = null
+    return ret
+})
+
+ipcMain.handle('addForm', () => {
+    modal.loadFile('./dist/addEventModal.html')
+})
+
+ipcMain.handle('reload',() => {
+    mainWindow.reload()
+})
 
 
 // This method will be called when Electron has finished
@@ -48,7 +59,7 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
     createWindow()
-
+    
     app.on('activate', () => {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.

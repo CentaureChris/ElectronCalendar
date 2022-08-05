@@ -2,5 +2,6 @@ export interface IEvents {
     id?: number,
     date: Date,
     description: string,
-    time: TimeRanges
+    start_event: TimeRanges,
+    end_event: TimeRanges
 }
