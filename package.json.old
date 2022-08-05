@@ -1,0 +1,20 @@
+{
+  "name": "calendar_app",
+  "version": "1.0.0",
+  "description": "Calendar app",
+  "main": "./dist/main.js",
+  "scripts": {
+    "start": "tsc && electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:electron-main": "cross-env NODE_ENV='development' electron -r babel-register ./app/renderer/"
+  },
+  "author": "Centaure Chris",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^20.0.0"
+  },
+  "dependencies": {
+    "electron-watch": "^1.0.9",
+    "mysql2": "^2.3.3"
+  }
+}

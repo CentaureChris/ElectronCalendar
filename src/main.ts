@@ -1,7 +1,6 @@
-// main.js
+const { app, BrowserWindow, ipcMain } = require('electron')
 
-// Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+let eventEnCour:any = null
 
 const createWindow = () => {
     // Create the browser window.
@@ -17,9 +16,32 @@ const createWindow = () => {
     // and load the index.html of the app.
     mainWindow.loadFile('./dist/index.html')
 
+    ipcMain.handle('open-modal', (e: any,data:any) => {
+        eventEnCour = data 
+        const modal = new BrowserWindow({
+            width: 800,
+            height: 600,
+            parent: mainWindow,
+            closable: true,
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false
+            }
+        })
+        modal.loadFile('./dist/modal.html')
+        modal.once('ready-to-show', () => {
+        })
+    })
+
+    ipcMain.handle('test', () => {
+        let ret = eventEnCour
+        eventEnCour = null
+        return ret
+    })
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 }
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

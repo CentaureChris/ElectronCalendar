@@ -1,3 +1,4 @@
+const { ipcRenderer } = require('electron')
 import { getAllEvents, getEvent } from "./modele/events.js"
 import { IEvents } from "./interfaces/events.js"
 
@@ -140,12 +141,12 @@ const renderCalendar = () => {
 
     [...monthDays.children].forEach((el) => {
       el.addEventListener('click', () => {
-        console.log(formatDate(new Date(el.id)))
         getEvent(formatDate(new Date(el.id)))
-          .then((data: any) => {
-            let eventClicked = data
-            console.log(eventClicked)
+          .then((event: any) => {
+            console.log(event)
+            ipcRenderer.invoke("open-modal",event)
           })
+          
         }) 
       })
     })
