@@ -22,7 +22,7 @@ html {
 .calendar {
   width: 45rem;
   height: 52rem;
-  background-color: #aeaeb3;
+  background-color: #080808ca;
   border-radius: 10%;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
@@ -30,7 +30,7 @@ html {
 .month {
   width: 100%;
   height: 12rem;
-  background-color: #138f5f;
+  background-color: #138f60;
   border-top-left-radius: 25px;
   display: flex;
   justify-content: space-between;

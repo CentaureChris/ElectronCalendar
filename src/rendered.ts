@@ -143,6 +143,8 @@ const renderCalendar = () => {
       el.addEventListener('click', () => {
         getEventByDate(formatDate(new Date(el.id)))
           .then((event: any) => {
+            console.log(event)
+            ipcRenderer.invoke("open-modal",event.length == 0 ?el.id :event)
           })
           
         }) 

@@ -15,7 +15,7 @@ function formatDate(date:Date) {
     return [year, month, day].join('-');
 }
 
-ipcRenderer.invoke('loadEvent').then((res:any) => {
+ipcRenderer.invoke('loadDay').then((res:any) => {
     if(Array.isArray(res)){
         let event = res
         console.log(event)
