@@ -20,7 +20,7 @@ const createWindow = () => {
     mainWindow.loadFile('./dist/index.html')
     
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 }
 
 ipcMain.handle('open-modal', (e: any,data:any) => {
@@ -36,7 +36,7 @@ ipcMain.handle('open-modal', (e: any,data:any) => {
         }
     })
     modal.loadFile('./dist/modal.html')
-    modal.webContents.openDevTools()
+    // modal.webContents.openDevTools()
 })
 
 ipcMain.handle('loadDay', () => {
