@@ -1,8 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 
-let eventEnCour:any = null
+let dayEnCour:any = null
 let mainWindow:typeof BrowserWindow | null = null
 let modal:typeof BrowserWindow | null = null
+let idEvent:any = null
 
 const createWindow = () => {
     // Create the browser window.
@@ -23,7 +24,7 @@ const createWindow = () => {
 }
 
 ipcMain.handle('open-modal', (e: any,data:any) => {
-    eventEnCour = data 
+    dayEnCour = data 
     modal = new BrowserWindow({
         width: 800,
         height: 600,
@@ -35,24 +36,33 @@ ipcMain.handle('open-modal', (e: any,data:any) => {
         }
     })
     modal.loadFile('./dist/modal.html')
-    
-    
+    modal.webContents.openDevTools()
 })
 
-ipcMain.handle('test', () => {
-    let ret = eventEnCour
-    // eventEnCour = null
+ipcMain.handle('loadDay', () => {
+    let ret = dayEnCour
+    // dayEnCour = null
     return ret
 })
+
 
 ipcMain.handle('addForm', () => {
     modal.loadFile('./dist/addEventModal.html')
 })
 
+ipcMain.handle('editForm', (e:any,data:any) => {
+    idEvent = data
+    modal.loadFile('./dist/editEventModal.html')
+})
+
+ipcMain.handle('loadEvent', () => {
+    let ret = idEvent
+    return ret
+})
+
 ipcMain.handle('reload',() => {
     mainWindow.reload()
 })
-
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

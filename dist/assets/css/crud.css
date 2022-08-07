@@ -105,6 +105,7 @@ html {
 .prev-date,
 .next-date {
   opacity: 0.5;
+  pointer-events: none;
 }
 
 .today {
