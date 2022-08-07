@@ -15,16 +15,21 @@ function formatDate(date:Date) {
     return [year, month, day].join('-');
 }
 
+const addEventButton = document.getElementById('addEventButton')
+const description = document.getElementById('description') as HTMLInputElement
+const startTime = document.getElementById('startTime') as HTMLInputElement
+const endTime = document.getElementById('endTime') as HTMLInputElement
+const prevButton = document.getElementById('goBack')
+
+prevButton?.addEventListener('click',() => {
+    console.log('feature no enable sorry')
+})
+
 ipcRenderer.invoke('loadDay').then((res:any) => {
     if(Array.isArray(res)){
         let event = res
         console.log(event)
         const date = formatDate(event[0].date)
-        const addEventButton = document.getElementById('addEventButton')
-        const description = document.getElementById('description') as HTMLInputElement
-        const startTime = document.getElementById('startTime') as HTMLInputElement
-        const endTime = document.getElementById('endTime') as HTMLInputElement
-
         addEventButton?.addEventListener('click', () => {
             if(description){
                 console.log(document.title)
@@ -40,11 +45,6 @@ ipcRenderer.invoke('loadDay').then((res:any) => {
         let event = formatDate(new Date(Date.parse(res)))
         console.log(event)
         const date = event
-        const addEventButton = document.getElementById('addEventButton')
-        const description = document.getElementById('description') as HTMLInputElement
-        const startTime = document.getElementById('startTime') as HTMLInputElement
-        const endTime = document.getElementById('endTime') as HTMLInputElement
-
         addEventButton?.addEventListener('click', () => {
             if(description){
                 console.log(document.title)
